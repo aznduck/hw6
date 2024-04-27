@@ -65,7 +65,7 @@ std::pair<std::set<std::string>, std::set<std::string> > parseDict(std::string f
 	std::string word;
 	while(dictfs >> word)
 	{
-		dict.insert(word);
+		dict.insert(word); //an
 		for(unsigned int i=word.size()-1;i>=1;i--)
 		{
 			prefix.insert(word.substr(0,i));
@@ -94,6 +94,21 @@ std::set<std::string> boggle(const std::set<std::string>& dict, const std::set<s
 bool boggleHelper(const std::set<std::string>& dict, const std::set<std::string>& prefix, const std::vector<std::vector<char> >& board, 
 								   std::string word, std::set<std::string>& result, unsigned int r, unsigned int c, int dr, int dc)
 {
-//add your solution here!
-
+  if (r >= board.size() || c >= board.size()) return false; //if out of bounds, stop
+  word += board[r][c]; //add current character
+  if(dict.find(word) != dict.end() && !boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc)) //if the next character added doesn't make a longer word and it's a word now, add to set
+  {
+    result.insert(word);
+    return true;
+  }
+  else
+  {
+    if(prefix.find(word) != prefix.end()) //if it's a prefix, recurse with next available character
+    {
+      std::cout <<  word << std::endl;
+      return boggleHelper(dict, prefix, board, word, result, r + dr, c + dc, dr, dc);
+    }
+    return false; //not a prefix, stop
+  }
+  
 }
